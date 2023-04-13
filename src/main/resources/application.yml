@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/produtos?createDatabaseIfNotExist=true
+    username: root
+    password: YourNewPassword
+  jpa:
+    hibernate:
+      ddl-auto: update
