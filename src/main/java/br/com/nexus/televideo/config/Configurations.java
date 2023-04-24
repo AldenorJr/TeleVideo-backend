@@ -36,7 +36,6 @@ public class Configurations {
                 .and().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/user/register").permitAll()
                 .and().cors()
-                .and().formLogin()
                 .and().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated().and().addFilterBefore(filterToken, UsernamePasswordAuthenticationFilter.class)

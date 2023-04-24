@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
@@ -40,6 +41,17 @@ public class UserController {
     @GetMapping("/findByEmail")
     public ResponseEntity<User> findUserByEmail (@RequestBody String email) {
         return new ResponseEntity<>(userService.findUserByEmail(email), HttpStatus.OK);
+    }
+
+    @GetMapping("/name")
+    public ResponseEntity<String> getNameByToken(HttpServletRequest response) {
+        System.out.println("executa?");
+        return new ResponseEntity<>(userService.findUserByToken(response).getUsername(), HttpStatus.FOUND);
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<String> getEmailByToken(HttpServletRequest response) {
+        return new ResponseEntity<>(userService.findUserByToken(response).getEmail(), HttpStatus.FOUND);
     }
 
     @PostMapping("/login")

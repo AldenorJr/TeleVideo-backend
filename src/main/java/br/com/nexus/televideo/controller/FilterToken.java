@@ -27,12 +27,9 @@ public class FilterToken extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token;
-
         String authorization = request.getHeader("Authorization");
-
         if(authorization != null) {
             token = authorization.replace("Bearer ", "");
-            System.out.println(authorization);
             String subject = tokenService.getSubject(token);
             User usuario = this.userRepository.findByEmail(subject);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
