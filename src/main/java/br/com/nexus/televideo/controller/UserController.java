@@ -43,19 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> efetuarLogin(@RequestBody Login login, HttpServletResponse response) {
+    public ResponseEntity<String> efetuarLogin(@RequestBody Login login, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(login.email(), login.password());
         Authentication authenticate = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         User user = (User) authenticate.getPrincipal();
         String tokem = tokenService.gerarToken(user);
 
-        Cookie cookie = new Cookie("jwt", tokem);
-        cookie.setMaxAge(604800);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
-
-        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(tokem, HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/delete")
