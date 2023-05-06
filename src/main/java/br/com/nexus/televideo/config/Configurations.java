@@ -39,7 +39,8 @@ public class Configurations {
                 .and().authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST, "/user/login").permitAll()
                 .anyRequest().authenticated().and().addFilterBefore(filterToken, UsernamePasswordAuthenticationFilter.class)
-                 .build();
+                .exceptionHandling().accessDeniedPage("/login").and()
+                .build();
     }
 
     @Bean

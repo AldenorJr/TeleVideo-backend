@@ -1,5 +1,6 @@
 package br.com.nexus.televideo.controller;
 
+import br.com.nexus.televideo.DTO.AccountChange;
 import br.com.nexus.televideo.DTO.Login;
 import br.com.nexus.televideo.domain.User;
 import br.com.nexus.televideo.repository.UserRepository;
@@ -45,23 +46,36 @@ public class UserController {
 
     @GetMapping("/name")
     public ResponseEntity<String> getNameByToken(HttpServletRequest response) {
-        System.out.println("executa?");
-        return new ResponseEntity<>(userService.findUserByToken(response).getUsername(), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.findUserByToken(response).getUsername(), HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<User> getUserByToken(HttpServletRequest response) {
+        return new ResponseEntity<>(userService.findUserByToken(response), HttpStatus.OK);
     }
 
     @GetMapping("/email")
     public ResponseEntity<String> getEmailByToken(HttpServletRequest response) {
-        return new ResponseEntity<>(userService.findUserByToken(response).getEmail(), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.findUserByToken(response).getEmail(), HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> efetuarLogin(@RequestBody Login login, HttpServletResponse response) {
+    public ResponseEntity<String> efetuarLogin(@RequestBody Login login) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(login.email(), login.password());
         Authentication authenticate = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
         User user = (User) authenticate.getPrincipal();
         String tokem = tokenService.gerarToken(user);
 
         return new ResponseEntity<>(tokem, HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("change")
+    public ResponseEntity<Void> changedAccount(@RequestBody AccountChange accountChange, HttpServletRequest response) {
+        User userByToken = userService.findUserByToken(response);
+        userByToken.setUserName(accountChange.userName());
+        userByToken.setEmail(accountChange.email());
+        userService.replace(userByToken);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/delete")
